@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeGrocer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        div {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Delete Checked Item Section -->
+    <div>
+        <h2>Delete Checked Item</h2>
+        <label for="deletedID">Enter ID to delete:</label>
+        <input type="number" id="deletedID" />
+        <button onclick="deleteCheckedItem()">Delete Item</button>
+    </div>
+
+    <!-- Add Item Section -->
+    <div>
+        <h2>Add Item</h2>
+        <form id="addItemForm">
+            <label for="addedID">ID:</label>
+            <input type="number" id="addedID" required />
+
+            <label for="category">Category:</label>
+            <input type="text" id="category" required />
+
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" required />
+
+            <label for="unit">Unit:</label>
+            <input type="text" id="unit" />
+
+            <label for="notes">Notes:</label>
+            <input type="text" id="notes" />
+
+            <label for="shop">Shop:</label>
+            <input type="text" id="shop" />
+
+            <label for="grocery">Grocery:</label>
+            <input type="text" id="grocery" />
+
+            <label for="user">User:</label>
+            <input type="text" id="user" required />
+
+            <button type="button" onclick="addItem()">Add Item</button>
+        </form>
+    </div>
+
+
+
+
+
+
+
+    <script>
+        async function deleteCheckedItem() {
+            const deletedID = document.getElementById('deletedID').value;
+
+            if (isNaN(deletedID)) {
+                alert('Please enter a valid number.');
+                return;
+            }
+
+            const data = {
+                id: parseFloat(deletedID),
+            };
+
+            const response = await fetch('/api/delete_checked_item', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            console.log(result);
+            // Process the result and update the UI as needed
+        }
+
+    async function addItem() {
+        const addedID = parseFloat(document.getElementById('addedID').value);
+        const category = document.getElementById('category').value;
+        const amount = parseFloat(document.getElementById('amount').value);
+        const unit = document.getElementById('unit').value;
+        const notes = document.getElementById('notes').value;
+        const shop = document.getElementById('shop').value;
+        const grocery = document.getElementById('grocery').value;
+        const user = document.getElementById('user').value;
+
+        if (isNaN(addedID) || isNaN(amount)) {
+            alert('Please enter valid numbers.');
+            return;
+        }
+        
+        const data = {
+        id: addedID,
+        category: category,
+        amount: amount,
+        unit: unit,
+        notes: notes,
+        shop: shop,
+        grocery: grocery,
+        user: user
+        
+        };
+
+        try {
+            const response = await fetch('/api/add_item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log(result);
+            // Process the result and update the UI as needed
+        } catch (error) {
+            console.error('Error adding item:', error.message);
+            // Handle error, show a message to the user, or perform other actions as needed
+        }
+    }
+    
+    </script>
+</body>
+</html>
