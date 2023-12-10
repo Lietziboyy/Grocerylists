@@ -31,23 +31,22 @@ def create_table():
     conn.close()
 
 
-def delete_checked_items():
-    +    """
-    +    Deletes the checked items from the 'groceries' table in the SQLite database.
-    +
-    +    Parameters:
-    +    None
-    +
-    +    Returns:
-    +    None
-    +    """
+def delete_checked_items(id):
+    """
+    Deletes the checked items with the specified id from the 'groceries' table in the SQLite database.
+
+    Parameters:
+    id (int): The id of the items to be deleted.
+
+    Returns:
+    None
+    """
 
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
-    c.execute("DELETE FROM groceries WHERE id IN (?)")
+    c.execute("DELETE FROM groceries WHERE id = ?", (id,))
     conn.commit()
-    conn.close()
-
+    conn.close()   
 
 
 def add_item(id, date_added, category, amount, unit, notes, shop, grocery, user, deleted):
